@@ -1,3 +1,9 @@
+"""
+If you like this project please consider supporting me by donating to the following:
+BTC: bc1qprzwse3jfeknqgnuxfka7uu2rlkevq4pu32vk0
+ETH: 0xe13b488b79173eB724C15CDe4FaF6933F1940633
+ADA: Ae2tdPwUPEZKMg5g5JGv3Y8FFqnkVwmkV5MmhmJ7yChSgHrHBqknLJfHd8F
+"""
 
 from datetime import datetime
 from time import sleep
