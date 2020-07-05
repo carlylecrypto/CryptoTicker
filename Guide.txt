@@ -1,0 +1,89 @@
+This is a brief guide on how to setup your CryptoTicker
+Some knowledge of Raspberry Pi and Linux is helpful. If you know how to use Git I would highly recommend using it.
+
+Please note this is not the most beginner friendly project but I have tried to break it down. It is my first time writing a guide so I am sorry in advance!
+Much of this guide is based the following link: https://www.circuitbasics.com/raspberry-pi-i2c-lcd-set-up-and-programming/
+
+If you like this project and find this code and guide useful, please consider supporting me by donating to the following:
+BTC: bc1qprzwse3jfeknqgnuxfka7uu2rlkevq4pu32vk0
+ETH: 0xe13b488b79173eB724C15CDe4FaF6933F1940633
+ADA: Ae2tdPwUPEZKMg5g5JGv3Y8FFqnkVwmkV5MmhmJ7yChSgHrHBqknLJfHd8F
+
+Parts:
+  -Raspberry Pi Zero W (the one with WiFi)
+  -A LCD display with I2C backpack : 16x2 1602 LCD Display Screen Blue + IIC I2C Module Interface Adapter for UNO Raspberry Pi LCD160
+  
+Wiring:
+  -Note a pin out is provided by: https://pi4j.com/1.2/pins/model-zerow-rev1.html
+  -Connect Vcc to Pin 2 (5 V)
+  -Connect GND to Pin 6 (GND)
+  -Connect SDA to Pin 3 (GPIO 8)
+  -Connect SLC to Pin 5 (GPIO 9)
+
+Setting up Raspberry Pi:
+  -Download Raspberry Pi OS (32-bit) Lite from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
+  -Once downloaded burn to micro SD card using Etcher: https://www.balena.io/etcher/
+  -Follow these steps to ensure your Raspberry Pi connects to your WiFi when it is turned on: https://www.raspberrypi-spy.co.uk/2017/04/manually-setting-up-pi-wifi-using-wpa_supplicant-conf/
+  -Enable SSH from the SD card (the thing that will let your connect to your Raspberry Pi and configure it from another computer): https://linuxize.com/post/how-to-enable-ssh-on-raspberry-pi/
+  -Now restart your Raspberry Pi by unplugging and plugging back in again
+  -You will now need to SSH into your Raspberry Pi. This can be done from the terminal in Mac or Linux or using PuTTY from Windows: https://www.chiark.greenend.org.uk/~sgtatham/putty/
+  -You will need to find the local IP address of your Raspberry Pi. I personally did this by logging into my WiFi router and finding raspberry pi
+  -There are other ways to find the IP address of your Raspberry Pi, more details at: https://learn.pimoroni.com/tutorial/raspberry-pi/finding-your-raspberry-pi
+  -Once your have it you will need to login to your Raspberry Pi by doing the following:
+    
+    Windows:
+      -Open PuTTY and enter the IP address in the host section part, then click open
+      -You will be promted to enter a username, this is just: pi
+    Mac/Linux:
+      -Open the terminal and type ssh pi@<the IP address>
+      -For example: ssh pi@192.168.5.1
+  
+  -You might be prompted to agree to things, just tap y and enter
+  -Now enter the password: raspberry
+  -You are now hopefully in to your raspberry pi!
+  
+Setting up Crypto Ticker:
+  -We will need to do a few more things now
+  -First run the command: sudo apt-get install python3-pip
+  -Once that is run, run: sudo pip3 install datetime
+  -Again once done run: sudo pip3 install time
+  -Again: sudo pip3 install pycoingecko
+  -Again: sudo pip3 install smbus
+  -Still with me? We are getting there!
+  -Next we have to enable I2C (the protocol that allows the Raspberry Pi to talk to the LCD display)
+  -To do this look at the following: https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
+  -If that link didn't make much sense, here is an alternative methode: https://ozzmaker.com/i2c/
+  -When you type the following you should see a matrix come up with some number in the middle: sudo i2cdetect -y 1
+  -Remember this number! For me it was 25
+  -If you don't see anything, check your wiring and make sure that your LCD screen is lit up
+  -Right! Now comes the last few bits, installing the software.
+  -Run the command: sudo nano CryptoTicker.py
+  -Navigate to the CryptoTicker.py code in this GitHub repository. Copy and paste the code content into the CryptoTicker.py on the Raspberry Pi
+  -You can paste the code into the Raspberry Pi just by right clicking!
+  -You can modify this code to give your local currency and favourite cryptocurrencies
+  -Now press ctrl + o and enter to save and then ctrl + x to exit the editor on the Raspberry Pi
+  -Run the command: sudo nano I2C_LCD_driver.py
+  -Copy and paste the I2C_LCD_driver.py contents on this GitHub into the I2C_LCD_driver.py that you have open on the Raspberry Pi
+  -CHANGE the bit in the code that says ADDRESS = 0x27 to that number I told you to remember. So in my case: ADDRESS = 0x25
+  -Again press ctrl + o and enter to save and the ctrl + x to exit the editor on the Raspberry Pi
+  -Last bit
+  -Run: sudo nano /etc/rc.local
+  -You will now be greeted with lots of text
+  -Enter the following in between fi and exit 0:
+  sudo bash -c 'sudo -H -u pi /usr/bin/python3 /home/pi/CryptoTicker.py > /home/pi/CT.log 2>&1' &
+  
+  -Restart the Raspberry Pi by running: sudo reboot
+  EVERYTHING SHOULD BE WORKING NOW!
+  If not, there are some other guides that are quite helpfull:
+  https://www.circuitbasics.com/raspberry-pi-i2c-lcd-set-up-and-programming/
+  https://www.raspberrypi-spy.co.uk/2015/05/using-an-i2c-enabled-lcd-screen-with-the-raspberry-pi/
+  
+ Please note that the original I2C display driver code can also be found at: https://gist.github.com/DenisFromHR/cc863375a6e19dce359d
+  
+  
+  
+  
+  
+  
+ 
+
